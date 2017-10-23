@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Oct 23 13:12:37 2017
+
+@author: yekanhan
+"""
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import preprocessing  #标准化
+from sklearn.cross_validation import train_test_split #数据集划分
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+'''
+df1 = pd.DataFrame([[1.0,1.1,'A'],[1.0,1.0,'A'],[0,0,'B'],[0,0.1,'B']],index=[1,2,3,4],columns=['atr1','atr2','labels'])
+neigh = KNeighborsClassifier(3)
+neigh.fit(df1.iloc[:,0:2],df1.iloc[:,-1])
+neigh.predict([0,0])
+'''
+#读取数据集
+dating = pd.read_table('C:\\Users\\yekanhan\\Desktop\\MLiA_SourceCode\\machinelearninginaction\\Ch02\\datingTestSet2.txt')
+'''
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter(dating.iloc[:,0],dating.iloc[:,1],c=np.array(dating.iloc[:,-1]))
+'''
+#特征
+data = dating.iloc[:,:-1]
+#特征标准化
+data = preprocessing.scale(data)
+#标签
+labels = dating.iloc[:,-1]
+
+print (data,labels)
+
+#数据集划分
+x_train,x_test,y_train,y_test = train_test_split(data, labels, test_size = 0.2, random_state = 0)
+
+y_test = np.array(y_test)
+
+neigh = KNeighborsClassifier(3)
+neigh.fit(x_train,y_train)
+a = neigh.predict(x_test)
+
+accuracy_count = 0
+
+for i in range(0,len(a)):
+    if a[i] == y_test[i]:
+        accuracy_count = accuracy_count + 1
+#计算准确率
+print (accuracy_count/200)
+    
